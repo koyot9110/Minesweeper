@@ -3,10 +3,13 @@ package minesweeper.consoleui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import minesweeper.UserInterface;
 import minesweeper.core.Clue;
 import minesweeper.core.Field;
+import minesweeper.core.GameState;
 import minesweeper.core.Mine;
 import minesweeper.core.Tile;
 
@@ -34,12 +37,8 @@ public class ConsoleUI implements UserInterface {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * minesweeper.consoleui.UserInterface#newGameStarted(minesweeper.core.Field
-	 * )
+	/**
+	 * New game
 	 */
 	@Override
 	public void newGameStarted(Field field) {
@@ -47,20 +46,25 @@ public class ConsoleUI implements UserInterface {
 		do {
 			update();
 			processInput();
-			throw new UnsupportedOperationException(
-					"Resolve the game state - winning or loosing condition.");
+			if (field.getState() == GameState.SOLVED) {
+				update();
+				System.out.println("You won!!! CONGRATULATION!!!");
+				System.exit(0);
+			} else if (field.getState() == GameState.FAILED) {
+				update();
+				System.out.println("You lose! GAME OVER!!!");
+				System.exit(0);
+			}
 		} while (true);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see minesweeper.consoleui.UserInterface#update()
+	/**
+	 * Draw game field
 	 */
 	@Override
 	public void update() {
-		int column = 0;
 		char row = 'A';
+		int column = 1;
 		for (int i = -1; i < field.getRowCount(); i++) {
 			for (int j = -1; j < field.getColumnCount(); j++) {
 				if ((i == -1) && (j == -1)) {
@@ -73,15 +77,12 @@ public class ConsoleUI implements UserInterface {
 					column++;
 				} else {
 					Tile tempTile = field.getTile(i, j);
-					if (tempTile == null) {
-						System.out.println("asdad");
-					}
 					switch (tempTile.getState()) {
 					case OPEN:
 						if (tempTile instanceof Mine) {
 							System.out.printf("X ");
 						} else if (tempTile instanceof Clue) {
-							System.out.print(((Clue) tempTile).getValue());
+							System.out.print(((Clue) tempTile).getValue() + " ");
 						}
 						break;
 					case MARKED:
@@ -102,7 +103,28 @@ public class ConsoleUI implements UserInterface {
 	 * playing field according to input string.
 	 */
 	private void processInput() {
-		throw new UnsupportedOperationException(
-				"Method processInput not yet implemented");
+		System.out.println("Enter X for exit");
+		System.out.println("Enter M/m for mark tile");
+		System.out.println("Enter O/o for open tile");
+		
+		Pattern pattern = Pattern.compile("([XMmOo]{1})([A-Z]{1}||[a-z]{1})?(\\d{1,2})?");
+		Matcher matcher = pattern.matcher(readLine());
+		
+		if (matcher.matches()) {
+			int row = matcher.group(2).toUpperCase().charAt(0)-'A';
+			int column = Integer.parseInt(matcher.group(3)) - 1;
+			
+			switch (matcher.group(1).toUpperCase()) {
+			case "X": System.exit(0);
+				break;
+			case "M": field.markTile(row, column);
+				break;
+			case "O": field.openTile(row, column);
+				break;
+			}
+		} else {
+			System.out.println("Wrong format input");
+			processInput();
+		}
 	}
 }

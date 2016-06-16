@@ -2,6 +2,8 @@ package minesweeper.core;
 
 import java.util.Random;
 
+import javax.rmi.CORBA.Tie;
+
 import minesweeper.core.Tile.State;
 
 /**
@@ -90,6 +92,8 @@ public class Field {
 			if (tile instanceof Mine) {
 				state = GameState.FAILED;
 				return;
+			} else if (((Clue) tile).getValue() == 0) {
+				openAdjacentTiles(row, column);
 			}
 			if (isSolved()) {
 				state = GameState.SOLVED;
@@ -131,6 +135,9 @@ public class Field {
 		feelClue();
 	}
 
+	/**
+	 * Feel clue except of mine
+	 */
 	private void feelClue() {
 		for (int row = 0; row < getRowCount(); row++) {
 			for (int column = 0; column < getColumnCount(); column++) {
@@ -154,6 +161,11 @@ public class Field {
 		}
 	}
 
+	/**
+	 * Return count tiles by state
+	 * @param state
+	 * @return count
+	 */
 	private int getNumberOf(Tile.State state) {
 		int count = 0;
 		for (int row = 0; row < tiles.length; row++) {
@@ -166,6 +178,26 @@ public class Field {
 		return count;
 	}
 
+	/**
+	 * Open clue around clue with value 0
+	 */
+	private void openAdjacentTiles(int row, int column){
+		for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
+			int actRow = row + rowOffset;
+			if (actRow >= 0 && actRow < rowCount) {
+				for (int columnOffset = -1; columnOffset <= 1; columnOffset++) {
+					int actColumn = column + columnOffset;
+					if (actColumn >= 0 && actColumn < columnCount) {
+						if (tiles[actRow][actColumn] instanceof Clue) {
+							openTile(actRow, actColumn);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
 	/**
 	 * Returns number of adjacent mines for a tile at specified position in the
 	 * field.
@@ -193,4 +225,7 @@ public class Field {
 		}
 		return count;
 	}
+	
+	
+	
 }

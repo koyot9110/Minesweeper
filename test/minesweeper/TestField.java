@@ -38,11 +38,11 @@ public class TestField {
 		Random rnd = new Random();
 		int rowCount = rnd.nextInt(10) + 5;
 		int columnCount = rnd.nextInt(10) + 5;
-		int mineCount = rnd.nextInt(10) + 5;
+		int mineCount = rnd.nextInt(10) + 500;
 		
-		if (rowCount * columnCount < mineCount) {
+		do {
 			mineCount = rnd.nextInt(10) + 5;
-		}
+		} while (rowCount * columnCount < mineCount);
 		
 		Field field = new Field(rowCount, columnCount, mineCount);
 		int tempMine = 0;
@@ -56,4 +56,44 @@ public class TestField {
 		}
 		assertTrue("Pocet vygenerovanych min nie je zhodny s poctom min v poli", mineCount == tempMine);
 	}
+	
+	@Test
+	public void testRowCount(){
+		Random rnd = new Random();
+		int rowCount = rnd.nextInt(10) + 5;
+		int columnCount = rnd.nextInt(10) + 5;
+		int mineCount = rnd.nextInt(10) + 5;
+		
+		while (rowCount * columnCount < mineCount) {
+			mineCount = rnd.nextInt(10) + 5;
+		}
+		
+		int tempRow = 0;
+		
+		for (int row = 0; row < rowCount; row++) {
+			tempRow++;
+		}
+		assertTrue("Pocet vygenerovanych riadkov nie je zhodny s poctom riadkov v poli", rowCount == tempRow);
+	}
+	
+	@Test
+	public void testColumnCount(){
+		Random rnd = new Random();
+		int rowCount = rnd.nextInt(10) + 5;
+		int columnCount = rnd.nextInt(10) + 5;
+		int mineCount = rnd.nextInt(10) + 5;
+		
+		while (rowCount * columnCount < mineCount) {
+			mineCount = rnd.nextInt(10) + 5;
+		}
+			
+		int tempColumn = 0;
+		
+		for (int column = 0; column < columnCount; column++) {
+			tempColumn++;
+		}
+		assertTrue("Pocet vygenerovanych stlpcov nie je zhodny s poctom stlpcov v poli", columnCount == tempColumn);
+	}
+	
 }
+	
