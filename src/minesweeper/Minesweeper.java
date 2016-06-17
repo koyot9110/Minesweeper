@@ -9,6 +9,19 @@ import minesweeper.core.Field;
 public class Minesweeper {
 	/** User interface. */
 	private UserInterface userInterface;
+	
+	private long startMillis = System.currentTimeMillis();
+	
+	private BestTimes bestTimes;
+	
+	public int getPlayingSecond(){
+		long time = System.currentTimeMillis() - startMillis;
+		return (int) time % 1000;
+	}
+
+	public BestTimes getBestTimes() {
+		return bestTimes;
+	}
 
 	/**
 	 * Constructor.

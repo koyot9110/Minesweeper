@@ -1,9 +1,6 @@
 package minesweeper.core;
 
 import java.util.Random;
-
-import javax.rmi.CORBA.Tie;
-
 import minesweeper.core.Tile.State;
 
 /**
@@ -168,8 +165,8 @@ public class Field {
 	 */
 	private int getNumberOf(Tile.State state) {
 		int count = 0;
-		for (int row = 0; row < tiles.length; row++) {
-			for (int column = 0; column < tiles.length; column++) {
+		for (int row = 0; row < rowCount; row++) {
+			for (int column = 0; column < columnCount; column++) {
 				if (getTile(row, column).getState() == state) {
 					count++;
 				}
@@ -177,6 +174,11 @@ public class Field {
 		}
 		return count;
 	}
+	
+	public int getRemainingMineCount(){
+		return getMineCount() - getNumberOf(State.MARKED);
+	}
+	
 
 	/**
 	 * Open clue around clue with value 0

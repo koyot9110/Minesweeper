@@ -96,6 +96,7 @@ public class ConsoleUI implements UserInterface {
 			}
 			System.out.println();
 		}
+		System.out.println("Remaining mine: " + field.getRemainingMineCount());
 	}
 
 	/**
@@ -103,12 +104,20 @@ public class ConsoleUI implements UserInterface {
 	 * playing field according to input string.
 	 */
 	private void processInput() {
+		try {
+			handleInput(readLine());
+		} catch (WrongFormatException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void handleInput(String input) throws WrongFormatException {
 		System.out.println("Enter X for exit");
 		System.out.println("Enter M/m for mark tile");
 		System.out.println("Enter O/o for open tile");
 		
 		Pattern pattern = Pattern.compile("([XMmOo]{1})([A-Z]{1}||[a-z]{1})?(\\d{1,2})?");
-		Matcher matcher = pattern.matcher(readLine());
+		Matcher matcher = pattern.matcher(input);
 		
 		if (matcher.matches()) {
 			int row = matcher.group(2).toUpperCase().charAt(0)-'A';
