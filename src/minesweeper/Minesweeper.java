@@ -15,6 +15,8 @@ public class Minesweeper {
 	private BestTimes bestTimes;
 
 	private static Minesweeper instance;
+	
+	private Settings settings;
 
 	/**
 	 * Constructor.
@@ -38,6 +40,14 @@ public class Minesweeper {
 
 	public static Minesweeper getInstance() {
 		return instance;
+	}
+
+	public Settings getSettings() {
+		return settings;
+	}
+
+	public void setSettings(Settings settings) {
+		this.settings = settings;
 	}
 
 	/**
